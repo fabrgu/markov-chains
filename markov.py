@@ -1,7 +1,7 @@
 """Generate Markov text from text files."""
 
 from random import choice
-
+import pdb
 
 def open_and_read_file(file_path):
     """Take file path as string; return text as string.
@@ -42,6 +42,15 @@ def make_chains(text_string):
     """
 
     chains = {}
+# taking the entire text and splitting at white spaces
+# create a tuple
+    words = text_string.split()
+    for i in range(len(words)-2):
+        word_tuple = (words[i], words[i + 1])
+        value = words[i + 2]
+        if word_tuple not in chains:
+            chains[word_tuple] = []
+        chains[word_tuple].append(value)
 
     # your code goes here
 
@@ -52,6 +61,14 @@ def make_text(chains):
     """Return text from chains."""
 
     words = []
+
+    current_key = choice(list(chains.keys()))
+
+    # pdb.set_trace()
+    chosen_word = choice(chains[current_key])
+    for word in current_key:
+        words.append(word)
+    words.append(chosen_word)
 
     # your code goes here
 
