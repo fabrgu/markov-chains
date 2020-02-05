@@ -1,6 +1,7 @@
 """Generate Markov text from text files."""
 
 from random import choice
+import sys
 import pdb
 
 def open_and_read_file(file_path):
@@ -31,7 +32,9 @@ for i in range(len(words)-2): we got the length of the whole list . going up to
 # create a tuple
 # function is making a tuple(key) to list(value) dictonary
 # words is a list and each word is an element. so we split at the white spaces
-
+#     chains[word_tuple] = []
+        chains[word_tuple].append(value)
+         if the word is not in the dictonaries key  its adding an empty list to
  
     For example:
 
@@ -65,6 +68,42 @@ for i in range(len(words)-2): we got the length of the whole list . going up to
     return chains
 
 
+def make_n_chains(text_string, n):
+    chains = {}
+    words = text_string.split()
+    for i in range(len(words)-n):
+        list_for_tuple = words[i:i+n]
+        word_tuple = tuple(list_for_tuple)
+        value = words[i + n]
+        if word_tuple not in chains:
+            chains[word_tuple] = []
+        chains[word_tuple].append(value)
+    # pdb.set_trace()
+    return chains
+
+
+def make_n_text(chains):
+    words = []
+    current_key = choice(list(chains.keys()))
+    n = len(current_key)
+    chosen_word = choice(chains[current_key])
+    for word in current_key:
+        words.append(word)
+    words.append(chosen_word)
+
+    while chosen_word is not None:
+        key_list = list(current_key[1:])
+        key_list.append(chosen_word)
+        current_key = tuple(key_list)
+        if current_key in chains:
+            chosen_word = choice(chains[current_key])
+        else:
+            chosen_word = None
+    #pdb.set_trace()
+    return " ".join(words)
+
+
+
 def make_text(chains):
     """Return text from chains."""
 # we got a random key and random word from the key value
@@ -93,7 +132,37 @@ def make_text(chains):
     return " ".join(words)
 
 
+def make_sentences(chains):
+    """Return text from chains."""
+# we got a random key and random word from the key value
+# initalize
+    words = []
+    current_key = choice(list(chains.keys()))
+    while not (current_key[0][0].isupper() and current_key[1][0].islower()):
+        current_key = choice(list(chains.keys()))
+
+    #pdb.set_trace()
+    chosen_word = choice(chains[current_key])
+    for word in current_key:
+        words.append(word)
+    words.append(chosen_word)
+    # reassign the current_key variable to the first key
+    while chosen_word is not None:
+        current_key = (current_key[1], chosen_word)
+        if current_key in chains:
+            chosen_word = choice(chains[current_key])
+            for word in current_key:
+                words.append(word)
+            words.append(chosen_word)
+        else:
+            chosen_word = None
+
+    return " ".join(words)
+
+
 input_path = "green-eggs.txt"
+if len(sys.argv) > 1:
+    input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
@@ -102,6 +171,6 @@ input_text = open_and_read_file(input_path)
 chains = make_chains(input_text)
 
 # Produce random text
-random_text = make_text(chains)
+random_text = make_sentences(chains)
 
 print(random_text)
