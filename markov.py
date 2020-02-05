@@ -19,6 +19,19 @@ def open_and_read_file(file_path):
     return contents
 
 
+def open_and_read_files(file_path1, file_path2):
+    file1 = open(file_path1)
+    file2 = open(file_path2)
+
+    content1 = file1.read()
+    content2 = file2.read()
+
+    file1.close()
+    file2.close()
+
+    return content1 + content2
+
+
 def make_chains(text_string):
     """Take input text as string; return dictionary of Markov chains.
 
@@ -161,11 +174,12 @@ def make_sentences(chains):
 
 
 input_path = "green-eggs.txt"
+input_path2 = "gettysburg.txt"
 if len(sys.argv) > 1:
     input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
-input_text = open_and_read_file(input_path)
+input_text = open_and_read_files(input_path, input_path2)
 
 # Get a Markov chain
 chains = make_chains(input_text)
