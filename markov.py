@@ -44,6 +44,8 @@ def make_chains(text_string):
     chains = {}
 # taking the entire text and splitting at white spaces
 # create a tuple
+# function is making a tuple(key) to list(value) dictonary
+
     words = text_string.split()
     for i in range(len(words)-2):
         word_tuple = (words[i], words[i + 1])
@@ -59,9 +61,10 @@ def make_chains(text_string):
 
 def make_text(chains):
     """Return text from chains."""
-
+# we got a random key and random word from the key value
+# initalize
     words = []
-
+    pdb.set_trace()
     current_key = choice(list(chains.keys()))
 
     # pdb.set_trace()
@@ -69,6 +72,16 @@ def make_text(chains):
     for word in current_key:
         words.append(word)
     words.append(chosen_word)
+    # reassign the current_key variable to the first key
+    while chosen_word is not None:
+        current_key = (current_key[1], chosen_word)
+        if current_key in chains:
+            chosen_word = choice(chains[current_key])
+            for word in current_key:
+                words.append(word)
+            words.append(chosen_word)
+        else:
+            chosen_word = None
 
     # your code goes here
 
